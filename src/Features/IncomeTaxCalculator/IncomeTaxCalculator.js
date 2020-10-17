@@ -18,6 +18,11 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 
+import * as actionTypes from '../../store/actions' ;
+import { connect } from 'react-redux';
+import { Provider } from 'react-redux' ;
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '500px',
@@ -163,7 +168,7 @@ function getStepContent(step) {
   }
 }
 
-const IncomeTaxCalculator = () => {
+const IncomeTaxCalculator = (store) => {
 
   const classes = useStyles();
 
@@ -183,13 +188,17 @@ const IncomeTaxCalculator = () => {
     setStateKeyValue: setStateKeyValue
   }
 
+  //let reduxStep = 1 ;
+  console.log(store.reduxStep)
+  
+
   return (
     <IncomeTaxCalcContext.Provider value={calcContextState}>
       <div className={classes.root}>
 
-          
+        
 
-        <Stepper activeStep={0} className={classes.stepper}>
+        <Stepper activeStep={store.reduxStep} className={classes.stepper}>
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -197,7 +206,7 @@ const IncomeTaxCalculator = () => {
           ))}
         </Stepper>
 
-        {getStepContent(state.activeStep)}
+        {getStepContent(store.reduxStep)}
 
         
         
@@ -207,7 +216,24 @@ const IncomeTaxCalculator = () => {
   )
 }
 
-export default IncomeTaxCalculator;
+const mapStateToProps = state => {
+  console.log([state])
+  return {
+    reduxStep: state.activeStep
+  } 
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onElementToggled : (fieldToggled, fieldValue) => dispatch({type: actionTypes.TOGL_ELEMENT, key: fieldToggled, value: fieldValue}) ,
+    onElementAdded : (fieldAdded) => dispatch({type: actionTypes.ADD_ELEMENT, key: fieldAdded}) ,
+    onElementRemoved : (fieldRemoved, id) => dispatch({type: actionTypes.REMOVE_ELEMENT, key: fieldRemoved, id: id}) ,
+    onNextStep : () => dispatch({type: actionTypes.NEXT_STEP}) ,
+    onPreviousStep : () => dispatch({type: actionTypes.PREV_STEP}) ,
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(IncomeTaxCalculator);
 
 
 /*

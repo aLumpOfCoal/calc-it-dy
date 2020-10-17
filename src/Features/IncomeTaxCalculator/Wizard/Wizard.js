@@ -27,25 +27,22 @@ import { ageCategoryAsArray } from "../../../Enumerations/AgeCategory";
 import { earningCycleAsArray } from "../../../Enumerations/EarningCycle";
 import { taxYearAsArray } from "../../../Enumerations/TaxYear";
 import { returnTypeAsArray } from "../../../Enumerations/ReturnType";
-import { earningCertAsArray } from "../../../Enumerations/EarningCert";
-import { businessTradeAsArray } from "../../../Enumerations/BusinessTrade";
-import { rentalPropertyAsArray } from "../../../Enumerations/RentalProperty";
-import { interestCertAsArray } from "../../../Enumerations/InterestCert";
-import { rAAsArray } from "../../../Enumerations/RetirementAnnuity";
-import { medicalAidAsArray } from "../../../Enumerations/MedicalAid";
+import buttonOptionConfig from "../../../Enumerations/InputFields";
 
+import * as actionTypes from '../../../store/actions' ;
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: theme.spacing(0,3,3,3),
-    
+    margin: theme.spacing(0, 3, 3, 3),
+
   },
   button: {
     margin: theme.spacing(1, 1, 0, 0),
     width: '400px'
   },
   input: {
-    margin: theme.spacing(2, 1, 2, 0),
+    margin: theme.spacing(1, 1, 1, 0),
   },
 
   modal: {
@@ -57,10 +54,10 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(0, 2, 2,2),
+    padding: theme.spacing(0, 2, 2, 2),
     outline: 0,
     margin: theme.spacing(1, 1, 2, 0),
-    
+
   },
   h3: {
     color: 'grey',
@@ -71,46 +68,46 @@ const useStyles = makeStyles((theme) => ({
 
 //const steps = ['Wizard', 'Details', 'Report'];
 
-const buttonOptionConfig = [
-  {
-      stateName: "earningCert",
-      label: "Earning Certificates?"
-  },
-  {
-      stateName: "businessTrade",
-      label: "Business Trade?"
-  },
-  {
-      stateName: "rentalProperty",
-      label: "Rental Properties?"
-  },
-  {
-      stateName: "interestCert",
-      label: "Interest Certificates?"
-  },
-  {
-      stateName: "retirementAnnuities",
-      label: "Retirement Annuity?"
-  },
-  {
-      stateName: "medicalAid",
-      label: "Medical Aid?"
-  }
-  ]
+// const buttonOptionConfig = [
+//   {
+//     stateName: "earningCert",
+//     label: "Earning Certificates?"
+//   },
+//   {
+//     stateName: "businessTrade",
+//     label: "Business Trade?"
+//   },
+//   {
+//     stateName: "rentalProperty",
+//     label: "Rental Properties?"
+//   },
+//   {
+//     stateName: "interestCert",
+//     label: "Interest Certificates?"
+//   },
+//   {
+//     stateName: "retirementAnnuities",
+//     label: "Retirement Annuity?"
+//   },
+//   {
+//     stateName: "medicalAid",
+//     label: "Medical Aid?"
+//   }
+// ]
 
-const Wizard = () => {
-  
-    const handleChange = (event) => {
-       const name = event.target.name;
-      setState({
-         ...state,
-        [name]: event.target.value,
-       });
-     };
+const Wizard = props => {
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    setState({
+      ...state,
+      [name]: event.target.value,
+    });
+  };
 
   const classes = useStyles();
 
-//#region Enumerations
+  //#region Enumerations
 
   const returnType = useMemo(() => {
     return returnTypeAsArray();
@@ -128,16 +125,15 @@ const Wizard = () => {
     return taxYearAsArray();
   }, [])
 
-  const opsVol = ['dog','cat','birb'];
+  const opsVol = ['dog', 'cat', 'birb'];
 
-//#endregion Enumerations
+  //#endregion Enumerations
 
-//#region State Management
+  //#region State Management
 
   //use state provided for by IncomeTaxCalculator.Provider component
   const itc = useIncomeTaxCalculator();
 
-  
   const [state, setState] = React.useState(itc.state["wizard"]);
 
   useEffect(() => {
@@ -150,65 +146,92 @@ const Wizard = () => {
 
   const handleSetStateValue = (stateName, value) => {
     setState({ ...state, [stateName]: value });
+    console.log(state)
   };
 
 
   const handleAUtocompleteOnChange = event => {
     console.log(event);
   };
-//#endregion Statement Management
-  
+  //#endregion Statement Management
+
   const handleSubmit = data => {
     console.log(state);
     //handleSetStateValue("resultsForm", calculateTax(itc.state).resultsForm);
   };
 
+  console.log(props.reduxWizard)
+
   return (
     <>
 
-    <Paper className={classes.paper}>  
-    <FormControl component="fieldset" className={classes.formControl}>
+      <Paper className={classes.paper}>
+        <FormControl component="fieldset" className={classes.formControl}>
 
-      <h2 className={classes.h3}>WIZARD</h2>  
+          <h2 className={classes.h3}>WIZARD</h2>
 
-      <Autocomplete
-        className={classes.input}
-        id="tax-year-selector"
-        options={taxYearOptions}
-        defaultValue={taxYearOptions[0]}
-        getOptionLabel={(option) => option.title}
-        style={{ width: 400 }}
-        onChange={(event: any, newValue: string | null) => {
-          handleSetStateValue("taxYear", newValue ? newValue.value : 0);
-        }}
-        renderInput={params => (
-          <TextField {...params} label="Tax Year" variant="outlined" />
-        )}
-      />    
+          <Autocomplete
+            className={classes.input}
+            id="tax-type-selctor"
+            options={returnType}
+            defaultValue={returnType[0]}
+            disableClearable={true}
+            getOptionLabel={(option) => option.title}
+            style={{ width: 400 }}
+            onChange={(event: any, newValue: string | null) => {
+              //handleSetStateValue("taxYear", newValue ? newValue.value : 0);
+              props.onStatSel("taxType", newValue.value);
+            }}
+            renderInput={params => (
+              <TextField {...params} label="Tax Type" variant="outlined" />
+            )}
+          />
 
-      <Autocomplete
-        className={classes.input}
-        id="age-category-selector"
-        options={ageOptions}
-        defaultValue={ageOptions[0]}
-        getOptionLabel={(option) => option.title}
-        style={{ width: 400 }}
-        onChange={(event: any, newValue: string | null) => {
-          handleSetStateValue("ageCat", newValue ? newValue.value : 0);
-        }}
-        renderInput={params => (
-          <TextField {...params} label="Age Category" variant="outlined" />
-        )}
-      />
+          <Autocomplete
+            className={classes.input}
+            id="tax-year-selector"
+            options={taxYearOptions}
+            defaultValue={taxYearOptions[3]}
+            disableClearable={true}
+            getOptionLabel={(option) => option.title}
+            style={{ width: 400 }}
+            onChange={(event: any, newValue: string | null) => {
+              //handleSetStateValue("taxYear", newValue ? newValue.value : 0);
+              props.onStatSel("taxYear", newValue.value);
+            }}
+            renderInput={params => (
+              <TextField {...params} label="Tax Year" variant="outlined" />
+            )}
+          />
 
-      { buttonOptionConfig.map(config => (
-      <FormControlLabel
+          <Autocomplete
+            className={classes.input}
+            id="age-category-selector"
+            options={ageOptions}
+            defaultValue={ageOptions[0]}
+            disableClearable={true}
+            getOptionLabel={(option) => option.title}
+            style={{ width: 400 }}
+            onChange={(event: any, newValue: string | null) => {
+              //handleSetStateValue("ageCat", newValue ? newValue.value : 0);
+              props.onStatSel("ageCat",newValue.value)
+            }}
+            renderInput={params => (
+              <TextField {...params} label="Age Category" variant="outlined" />
+            )}
+          />
+
+          {buttonOptionConfig.map(config => (
+            <FormControlLabel
               key={config.stateName}
               control={
                 <Switch
-                  checked={state[config.stateName] || false}
+                  checked={props.reduxWizard[config.stateName] || false}
                   onChange={(event: any, newValue: string | null) => {
-                    handleSetStateValue(config.stateName, newValue ? newValue : 0);
+                    //handleSetStateValue(config.stateName, newValue ? newValue : 0);
+                    props.onElementToggled(config.stateName);
+                    //console.log([Element.checked])
+                    //store.onElementToggled(config.stateName,Element.checked)
                   }}
                   name={config.stateName}
                   color="primary"
@@ -216,19 +239,37 @@ const Wizard = () => {
               }
               label={config.label}
             />
-      ))}
+          ))}
 
+          <Button className={classes.button} onClick={props.onNextStep} variant="contained">
+            Calculate
+          </Button>
 
-      <Button className ={classes.button} onClick={handleSubmit} variant="contained">
-          Calculate
-      </Button>
-
-    </FormControl >
-    </Paper>
+        </FormControl >
+      </Paper>
 
     </>
   );
 };
 
-export default Wizard;
+//export default Wizard;
 
+const mapStateToProps = state => {
+  console.log([state])
+  return {
+    reduxWizard: state.wizard
+  } 
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onStatSel: (field, value) => dispatch({type: actionTypes.SEL_STAT, key: field, value: value}),
+    onElementToggled : (fieldToggled) => dispatch({type: actionTypes.TOGL_ELEMENT, key: fieldToggled}) ,
+    onElementAdded : (fieldAdded) => dispatch({type: actionTypes.ADD_ELEMENT, key: fieldAdded}) ,
+    onElementRemoved : (fieldRemoved, id) => dispatch({type: actionTypes.REMOVE_ELEMENT, key: fieldRemoved, id: id}) ,
+    onNextStep : () => dispatch({type: actionTypes.NEXT_STEP}) ,
+    onPreviousStep : () => dispatch({type: actionTypes.PREV_STEP}) ,
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wizard);

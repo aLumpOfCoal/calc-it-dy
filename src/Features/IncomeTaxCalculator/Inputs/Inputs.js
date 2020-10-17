@@ -22,6 +22,11 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 
+import InputFields from '../../../Enumerations/InputFields';
+
+import * as actionTypes from '../../../store/actions' ;
+import { connect } from 'react-redux';
+
 const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(0,3,3,3),
@@ -56,7 +61,9 @@ const useStyles = makeStyles((theme) => ({
   
   }));
 
-const Inputs = () => {
+const Inputs = props => {
+
+//#region State Controllers
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -90,13 +97,67 @@ const Inputs = () => {
       console.log(event);
     };
 
-    return (
-        <>
-        <Paper className={classes.paper}>  
-        <FormControl component="fieldset" className={classes.formControl}>
-      
+//#endregion State Controllers
 
-        <h2>Earnings Certificate</h2>
+          /*
+
+            If the wizard state is true then
+            add Header
+            add Increase button
+            add Accordion Component Header
+
+            ---- 
+
+            Close up the accordion if the state was true 
+
+            ####
+            CONDITIONAL RENDERING!
+            Learn how and when to use the render function
+            https://www.youtube.com/watch?v=ljWAvLqZ7Es
+          */
+return (
+    <Paper className={classes.paper}>  
+      <FormControl component="fieldset" className={classes.formControl}>
+        {InputFields.map(config1 => (
+          {props.reduxWizard[config1.stateName] === true && 
+              <>
+                <h2 className={classes.h3}>{config1.stateName}</h2>
+                {props.reduxInputs[config1.stateName].map(config2 => (
+                  <p>Test Child</p> 
+                ))} 
+              </>
+          } 
+        ))}
+        
+      </FormControl>
+    </Paper>
+)
+}
+
+//export default Inputs;
+
+const mapStateToProps = state => {
+  console.log([state])
+  return {
+    reduxWizard: state.wizard,
+    reduxInputs: state.inputs
+  } 
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onStatSel: (field, value) => dispatch({type: actionTypes.SEL_STAT, key: field, value: value}),
+    onElementToggled : (fieldToggled) => dispatch({type: actionTypes.TOGL_ELEMENT, key: fieldToggled}) ,
+    onElementAdded : (fieldAdded) => dispatch({type: actionTypes.ADD_ELEMENT, key: fieldAdded}) ,
+    onElementRemoved : (fieldRemoved, id) => dispatch({type: actionTypes.REMOVE_ELEMENT, key: fieldRemoved, id: id}) ,
+    onNextStep : () => dispatch({type: actionTypes.NEXT_STEP}) ,
+    onPreviousStep : () => dispatch({type: actionTypes.PREV_STEP}) ,
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Inputs);
+
+{/* <h2>Earnings Certificate</h2>
 
         <TextField
             id="outlined-basic"
@@ -318,11 +379,4 @@ const Inputs = () => {
             InputProps={{
             startAdornment: <InputAdornment position="start">R</InputAdornment>
             }}
-        />
-        </FormControl>
-        </Paper>
-    </>
-    )
-}
-
-export default Inputs;
+        /> */}
