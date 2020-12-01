@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Wizard from './Wizard/Wizard';
 import Inputs from './Inputs/Inputs';
+import Results from './Results/Results'
 import IncomeTaxCalcContext from './IncomeTaxCalculatorContext';
 
 import AGECATEGORY from '../../Enumerations/AgeCategory';
@@ -162,7 +163,7 @@ function getStepContent(step) {
     case 1:
       return <><Inputs /></>;
     case 2:
-      return <>3</>;
+      return <><Results /></>;
     default:
       throw new Error('Unknown step');
   }

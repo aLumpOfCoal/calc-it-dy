@@ -1,27 +1,27 @@
 const inputFields = [
     {
       stateName: "earningCert",
-      label: "Earning Certificates?"
+      label: "Earning Certificates"
     },
     {
       stateName: "businessTrade",
-      label: "Business Trade?"
+      label: "Business Trade"
     },
     {
       stateName: "rentalProperty",
-      label: "Rental Properties?"
+      label: "Rental Properties"
     },
     {
       stateName: "interestCert",
-      label: "Interest Certificates?"
+      label: "Interest Certificates"
     },
     {
       stateName: "retirementAnnuities",
-      label: "Retirement Annuity?"
+      label: "Retirement Annuity"
     },
     {
       stateName: "medicalAid",
-      label: "Medical Aid?"
+      label: "Medical Aid"
     }
   ]
 

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import uuidv4 from "uuid/v4";
 
-export const earningCertificateFactory = () => {
-    console.log(' FACTORY OPERATION ')
-    let earningCertificate = {
+export const capitalGainsFactory = () => {
+    const capitalGains = {
         id : uuidv4(),
         name :"" ,
         taxableEarnings: "",
@@ -11,14 +10,10 @@ export const earningCertificateFactory = () => {
         uIF: "",
         medical: "",
         rA: "",
-        taSwitch: false,
         travelAllowance: "",
         logbook: false ,
         lbMajority: false ,
-        netProfit: 0,
         taxLiability: "",
     }
-    return earningCertificate;
+    return capitalGains;
   }
-
-export default earningCertificateFactory ;

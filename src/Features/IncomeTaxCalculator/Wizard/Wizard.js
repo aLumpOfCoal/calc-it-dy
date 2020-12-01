@@ -66,34 +66,6 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-//const steps = ['Wizard', 'Details', 'Report'];
-
-// const buttonOptionConfig = [
-//   {
-//     stateName: "earningCert",
-//     label: "Earning Certificates?"
-//   },
-//   {
-//     stateName: "businessTrade",
-//     label: "Business Trade?"
-//   },
-//   {
-//     stateName: "rentalProperty",
-//     label: "Rental Properties?"
-//   },
-//   {
-//     stateName: "interestCert",
-//     label: "Interest Certificates?"
-//   },
-//   {
-//     stateName: "retirementAnnuities",
-//     label: "Retirement Annuity?"
-//   },
-//   {
-//     stateName: "medicalAid",
-//     label: "Medical Aid?"
-//   }
-// ]
 
 const Wizard = props => {
 
@@ -213,7 +185,6 @@ const Wizard = props => {
             getOptionLabel={(option) => option.title}
             style={{ width: 400 }}
             onChange={(event: any, newValue: string | null) => {
-              //handleSetStateValue("ageCat", newValue ? newValue.value : 0);
               props.onStatSel("ageCat",newValue.value)
             }}
             renderInput={params => (
@@ -228,10 +199,7 @@ const Wizard = props => {
                 <Switch
                   checked={props.reduxWizard[config.stateName] || false}
                   onChange={(event: any, newValue: string | null) => {
-                    //handleSetStateValue(config.stateName, newValue ? newValue : 0);
                     props.onElementToggled(config.stateName);
-                    //console.log([Element.checked])
-                    //store.onElementToggled(config.stateName,Element.checked)
                   }}
                   name={config.stateName}
                   color="primary"
@@ -242,7 +210,7 @@ const Wizard = props => {
           ))}
 
           <Button className={classes.button} onClick={props.onNextStep} variant="contained">
-            Calculate
+            Proceed
           </Button>
 
         </FormControl >
